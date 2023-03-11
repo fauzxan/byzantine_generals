@@ -2,6 +2,11 @@ from argparse import ArgumentParser
 from collections import Counter
 
 
+# Lockstep protocl
+
+
+
+
 class General:
     def __init__(self, id, is_traitor=False):
         self.id = id
@@ -24,6 +29,9 @@ class General:
                           order=order,
                           )
 
+
+    # TODO: This function should determine what the next delay is. 
+    # It should technically call something from the clock sync method.
     def _next_order(self, is_traitor, order, i):
         """A helper function to determine what each commander
         should pass on as the next order. Traitors will pass-
@@ -80,6 +88,7 @@ class General:
 
         """
         c = Counter(self.orders)
+        print(f"For {self} the order variable has {len(self.orders)}")
         return c.most_common()
 
 
@@ -98,6 +107,8 @@ def init_generals(generals_spec):
     generals = []
     for i, spec in enumerate(generals_spec):
         general = General(i)
+
+        # TODO: modify conditions to set 'traitors'
         if spec == "l":
             pass
         elif spec == "t":
@@ -109,6 +120,7 @@ def init_generals(generals_spec):
     # Add list of other generals to each general.
     for general in generals:
         general.other_generals = generals
+        
     return generals
 
 
@@ -130,6 +142,9 @@ def main():
 
     generals_spec = [x.strip() for x in args.generals.split(',')]
     generals = init_generals(generals_spec=generals_spec)
+
+    # TODO: The generals init should be called from game engine using some appropriate method.
+    print("Generals spec is", generals_spec)
     generals[0](m=args.recursion, order=args.order)
     print_decisions(generals)
 
